@@ -183,7 +183,7 @@ if __name__ == '__main__':
 
 
         # --- 7. 결과 그래프 및 모델 저장 ---
-        if episode_id % 100 == 0: 
+        if episode_id % args.video_interval == 0: 
 
             # 보상 그래프 저장
             plt.figure()
