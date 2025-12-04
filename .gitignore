@@ -122,3 +122,8 @@ TTT*
 rewards.jpg
 hover_ckpt
 landing_ckpt
+*_ckpt*
+*.pt
+*.gif
+*.jpg
+__pycache__

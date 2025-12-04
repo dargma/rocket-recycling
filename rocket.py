@@ -310,125 +310,101 @@ class Rocket(object):
         return frame_0, frame_1
 
     def create_polygons(self):
-
         polys = {'rocket': [], 'engine_work': [], 'target_region': []}
 
+        # --- [기존 코드 유지] 로켓 본체 ---
         if self.rocket_type == 'falcon':
-
             H, W = self.H, self.H/10
-            dl = self.H / 30
-
-            # rocket main body
             pts = [[-W/2, H/2], [W/2, H/2], [W/2, -H/2], [-W/2, -H/2]]
             polys['rocket'].append({'pts': pts, 'face_color': (242, 242, 242), 'edge_color': None})
-            # rocket paint
             pts = utils.create_rectangle_poly(center=(0, -0.35*H), w=W, h=0.1*H)
             polys['rocket'].append({'pts': pts, 'face_color': (42, 42, 42), 'edge_color': None})
             pts = utils.create_rectangle_poly(center=(0, -0.46*H), w=W, h=0.02*H)
             polys['rocket'].append({'pts': pts, 'face_color': (42, 42, 42), 'edge_color': None})
-            # rocket landing rack
             pts = [[-W/2, -H/2], [-W/2-H/10, -H/2-H/20], [-W/2, -H/2+H/20]]
             polys['rocket'].append({'pts': pts, 'face_color': None, 'edge_color': (0, 0, 0)})
             pts = [[W/2, -H/2], [W/2+H/10, -H/2-H/20], [W/2, -H/2+H/20]]
             polys['rocket'].append({'pts': pts, 'face_color': None, 'edge_color': (0, 0, 0)})
 
         elif self.rocket_type == 'starship':
-
+            # Starship 코드는 기존 그대로 유지
             H, W = self.H, self.H / 2.6
-            dl = self.H / 30
-
-            # rocket main body (right half)
-            pts = np.array([[ 0.        ,  0.5006878 ],
-                           [ 0.03125   ,  0.49243465],
-                           [ 0.0625    ,  0.48143053],
-                           [ 0.11458334,  0.43878955],
-                           [ 0.15277778,  0.3933975 ],
-                           [ 0.2326389 ,  0.23796424],
-                           [ 0.2326389 , -0.49931225],
-                           [ 0.        , -0.49931225]], dtype=np.float32)
-            pts[:, 0] = pts[:, 0] * W
-            pts[:, 1] = pts[:, 1] * H
+            pts = np.array([[ 0.        ,  0.5006878 ], [ 0.03125   ,  0.49243465], [ 0.0625    ,  0.48143053], [ 0.11458334,  0.43878955], [ 0.15277778,  0.3933975 ], [ 0.2326389 ,  0.23796424], [ 0.2326389 , -0.49931225], [ 0.        , -0.49931225]], dtype=np.float32)
+            pts[:, 0] = pts[:, 0] * W; pts[:, 1] = pts[:, 1] * H
             polys['rocket'].append({'pts': pts, 'face_color': (242, 242, 242), 'edge_color': None})
-
-            # rocket main body (left half)
-            pts = np.array([[-0.        ,  0.5006878 ],
-                           [-0.03125   ,  0.49243465],
-                           [-0.0625    ,  0.48143053],
-                           [-0.11458334,  0.43878955],
-                           [-0.15277778,  0.3933975 ],
-                           [-0.2326389 ,  0.23796424],
-                           [-0.2326389 , -0.49931225],
-                           [-0.        , -0.49931225]], dtype=np.float32)
-            pts[:, 0] = pts[:, 0] * W
-            pts[:, 1] = pts[:, 1] * H
+            pts = np.array([[-0.        ,  0.5006878 ], [-0.03125   ,  0.49243465], [-0.0625    ,  0.48143053], [-0.11458334,  0.43878955], [-0.15277778,  0.3933975 ], [-0.2326389 ,  0.23796424], [-0.2326389 , -0.49931225], [-0.        , -0.49931225]], dtype=np.float32)
+            pts[:, 0] = pts[:, 0] * W; pts[:, 1] = pts[:, 1] * H
             polys['rocket'].append({'pts': pts, 'face_color': (212, 212, 232), 'edge_color': None})
-
-            # upper wing (right)
-            pts = np.array([[0.15972222, 0.3933975 ],
-                           [0.3784722 , 0.303989  ],
-                           [0.3784722 , 0.2352132 ],
-                           [0.22916667, 0.23658872]], dtype=np.float32)
-            pts[:, 0] = pts[:, 0] * W
-            pts[:, 1] = pts[:, 1] * H
+            pts = np.array([[0.15972222, 0.3933975 ], [0.3784722 , 0.303989  ], [0.3784722 , 0.2352132 ], [0.22916667, 0.23658872]], dtype=np.float32)
+            pts[:, 0] = pts[:, 0] * W; pts[:, 1] = pts[:, 1] * H
             polys['rocket'].append({'pts': pts, 'face_color': (42, 42, 42), 'edge_color': None})
-
-            # upper wing (left)
-            pts = np.array([[-0.15972222,  0.3933975 ],
-                           [-0.3784722 ,  0.303989  ],
-                           [-0.3784722 ,  0.2352132 ],
-                           [-0.22916667,  0.23658872]], dtype=np.float32)
-            pts[:, 0] = pts[:, 0] * W
-            pts[:, 1] = pts[:, 1] * H
+            pts = np.array([[-0.15972222,  0.3933975 ], [-0.3784722 ,  0.303989  ], [-0.3784722 ,  0.2352132 ], [-0.22916667,  0.23658872]], dtype=np.float32)
+            pts[:, 0] = pts[:, 0] * W; pts[:, 1] = pts[:, 1] * H
             polys['rocket'].append({'pts': pts, 'face_color': (42, 42, 42), 'edge_color': None})
-
-            # lower wing (right)
-            pts = np.array([[ 0.2326389 , -0.16368638],
-                           [ 0.4548611 , -0.33562586],
-                           [ 0.4548611 , -0.48555708],
-                           [ 0.2638889 , -0.48555708]], dtype=np.float32)
-            pts[:, 0] = pts[:, 0] * W
-            pts[:, 1] = pts[:, 1] * H
+            pts = np.array([[ 0.2326389 , -0.16368638], [ 0.4548611 , -0.33562586], [ 0.4548611 , -0.48555708], [ 0.2638889 , -0.48555708]], dtype=np.float32)
+            pts[:, 0] = pts[:, 0] * W; pts[:, 1] = pts[:, 1] * H
             polys['rocket'].append({'pts': pts, 'face_color': (100, 100, 100), 'edge_color': None})
-
-            # lower wing (left)
-            pts = np.array([[-0.2326389 , -0.16368638],
-                           [-0.4548611 , -0.33562586],
-                           [-0.4548611 , -0.48555708],
-                           [-0.2638889 , -0.48555708]], dtype=np.float32)
-            pts[:, 0] = pts[:, 0] * W
-            pts[:, 1] = pts[:, 1] * H
+            pts = np.array([[-0.2326389 , -0.16368638], [-0.4548611 , -0.33562586], [-0.4548611 , -0.48555708], [-0.2638889 , -0.48555708]], dtype=np.float32)
+            pts[:, 0] = pts[:, 0] * W; pts[:, 1] = pts[:, 1] * H
             polys['rocket'].append({'pts': pts, 'face_color': (100, 100, 100), 'edge_color': None})
-
         else:
-            raise NotImplementedError('rocket type [%s] is not found, please choose one '
-                                      'from (falcon, starship)' % self.rocket_type)
+            raise NotImplementedError('rocket type [%s] is not found' % self.rocket_type)
 
-        # engine work
+
+        # --- [수정된 부분] 엔진 화염 (Engine Work) ---
         f, phi = self.state['f'], self.state['phi']
         c, s = np.cos(phi), np.sin(phi)
+        H = self.H
+        dl = self.H / 30
 
-        if f > 0 and f < 0.5 * self.g:
-            pts1 = utils.create_rectangle_poly(center=(2 * dl * s, -H / 2 - 2 * dl * c), w=dl, h=dl)
-            pts2 = utils.create_rectangle_poly(center=(5 * dl * s, -H / 2 - 5 * dl * c), w=1.5 * dl, h=1.5 * dl)
-            polys['engine_work'].append({'pts': pts1, 'face_color': (255, 255, 255), 'edge_color': None})
-            polys['engine_work'].append({'pts': pts2, 'face_color': (255, 255, 255), 'edge_color': None})
-        elif f > 0.5 * self.g and f < 1.5 * self.g:
-            pts1 = utils.create_rectangle_poly(center=(2 * dl * s, -H / 2 - 2 * dl * c), w=dl, h=dl)
-            pts2 = utils.create_rectangle_poly(center=(5 * dl * s, -H / 2 - 5 * dl * c), w=1.5 * dl, h=1.5 * dl)
-            pts3 = utils.create_rectangle_poly(center=(8 * dl * s, -H / 2 - 8 * dl * c), w=2 * dl, h=2 * dl)
-            polys['engine_work'].append({'pts': pts1, 'face_color': (255, 255, 255), 'edge_color': None})
-            polys['engine_work'].append({'pts': pts2, 'face_color': (255, 255, 255), 'edge_color': None})
-            polys['engine_work'].append({'pts': pts3, 'face_color': (255, 255, 255), 'edge_color': None})
-        elif f > 1.5 * self.g:
-            pts1 = utils.create_rectangle_poly(center=(2 * dl * s, -H / 2 - 2 * dl * c), w=dl, h=dl)
-            pts2 = utils.create_rectangle_poly(center=(5 * dl * s, -H / 2 - 5 * dl * c), w=1.5 * dl, h=1.5 * dl)
-            pts3 = utils.create_rectangle_poly(center=(8 * dl * s, -H / 2 - 8 * dl * c), w=2 * dl, h=2 * dl)
-            pts4 = utils.create_rectangle_poly(center=(12 * dl * s, -H / 2 - 12 * dl * c), w=3 * dl, h=3 * dl)
-            polys['engine_work'].append({'pts': pts1, 'face_color': (255, 255, 255), 'edge_color': None})
-            polys['engine_work'].append({'pts': pts2, 'face_color': (255, 255, 255), 'edge_color': None})
-            polys['engine_work'].append({'pts': pts3, 'face_color': (255, 255, 255), 'edge_color': None})
-            polys['engine_work'].append({'pts': pts4, 'face_color': (255, 255, 255), 'edge_color': None})
-        # target region
+        # [색상 수정] GIF 저장 시 색 반전을 막기 위해 RGB 순서로 정의합니다.
+        # 이렇게 하면 OpenCV가 내부적으로 색을 뒤집어 저장하더라도, GIF 생성기가 다시 뒤집어서 정상적인 주황색이 나옵니다.
+        color_outer = (255, 69, 0)    # 진한 주황색 (Red-Orange)
+        color_mid = (255, 200, 0)     # 밝은 노란색
+        color_inner = (255, 255, 255) # 흰색
+
+        # [크기 수정] 30% 더 키우기 (1.0 -> 1.3)
+        scale_factor = 2.5
+        
+        # 깜빡임 노이즈
+        noise_w = random.uniform(0.9, 1.1)
+        noise_h = random.uniform(0.9, 1.1)
+
+        def add_layered_flame(center_pos, base_w, base_h):
+            # 1. Outer (Orange) - 크기 30% 증가 적용
+            pts1 = utils.create_rectangle_poly(center=center_pos, 
+                                               w=base_w * noise_w * scale_factor, 
+                                               h=base_h * noise_h * scale_factor)
+            polys['engine_work'].append({'pts': pts1, 'face_color': color_outer, 'edge_color': None})
+            
+            # 2. Mid (Yellow)
+            pts2 = utils.create_rectangle_poly(center=center_pos, 
+                                               w=base_w * 0.7 * noise_w * scale_factor, 
+                                               h=base_h * 0.7 * noise_h * scale_factor)
+            polys['engine_work'].append({'pts': pts2, 'face_color': color_mid, 'edge_color': None})
+            
+            # 3. Inner (White)
+            pts3 = utils.create_rectangle_poly(center=center_pos, 
+                                               w=base_w * 0.4 * noise_w * scale_factor, 
+                                               h=base_h * 0.4 * noise_h * scale_factor)
+            polys['engine_work'].append({'pts': pts3, 'face_color': color_inner, 'edge_color': None})
+
+
+        # 추력에 따른 화염 생성
+        if f > 0:
+            add_layered_flame(center_pos=(2 * dl * s, -H / 2 - 2 * dl * c), 
+                              base_w=dl, base_h=dl)
+
+        if f > 0.5 * self.g:
+            add_layered_flame(center_pos=(5 * dl * s, -H / 2 - 5 * dl * c), 
+                              base_w=1.5 * dl, base_h=1.5 * dl)
+
+        if f > 1.5 * self.g:
+            add_layered_flame(center_pos=(8 * dl * s, -H / 2 - 8 * dl * c), 
+                              base_w=2 * dl, base_h=2 * dl)
+
+
+        # --- [기존 코드 유지] 타겟 영역 ---
         if self.task == 'hover':
             pts1 = utils.create_rectangle_poly(center=(self.target_x, self.target_y), w=0, h=self.target_r/3.0)
             pts2 = utils.create_rectangle_poly(center=(self.target_x, self.target_y), w=self.target_r/3.0, h=0)
@@ -442,11 +418,11 @@ class Rocket(object):
             polys['target_region'].append({'pts': pts2, 'face_color': None, 'edge_color': (242, 242, 242)})
             polys['target_region'].append({'pts': pts3, 'face_color': None, 'edge_color': (242, 242, 242)})
 
-        # apply transformation
+        # --- [기존 코드 유지] 좌표 변환 ---
         for poly in polys['rocket'] + polys['engine_work']:
             M = utils.create_pose_matrix(tx=self.state['x'], ty=self.state['y'], rz=self.state['theta'])
             pts = np.array(poly['pts'])
-            pts = np.concatenate([pts, np.ones_like(pts)], axis=-1)  # attach z=1, w=1
+            pts = np.concatenate([pts, np.ones_like(pts)], axis=-1)
             pts = np.matmul(M, pts.T).T
             poly['pts'] = pts[:, 0:2]
 
